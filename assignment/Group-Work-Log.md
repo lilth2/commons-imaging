@@ -131,8 +131,30 @@ Attachment SHA-256: `a8a525bc05d2ed014e77806189fd2d97437e9f768e799e224015ff0761d
 | --- | --- | --- | --- | --- |
 | 2026-10-23 | Shuyang Feng | Requested an English filename and English text throughout the merged work log, and a new submission. | Renamed the local merged log to Group-Work-Log.md, translated the historical entries, retained failures and evidence limitations, and prepared a repository copy at assignment/Group-Work-Log.md. This is a documentation revision; source and tests unchanged. English-text and annotation checks passed; the offline Apache RAT check passed (exit 0, 16.051 seconds). Submission status is available in Git history and the remote branch. | This document and its Git history. |
 
-## Next Work
+## Qingyuan Zhu - Independent Verification, Boundary Tests, and Code Review
 
-Qingyuan's proposed independent verification and additional boundary tests remain future work, separate from the reported group confirmation. Suggested cases include one to three remaining footer bytes, big-endian EXIF, truncated entries, and fail-on-error compliance behaviour. Record actual results and reviewer feedback when available.
+| Date / time | Member | Work completed | Result | Evidence |
+| --- | --- | --- | --- | --- |
+| 2026-10-23 14:48 AEDT | Qingyuan Zhu | Checked the local repository, Git branches, Java, and Maven. | Confirmed a clean master at baseline 4ee55f32. The group fix branch was available remotely. Java 25.0.4 was installed, but Maven was not on PATH. | Git status, branch and remote outputs, Java and Maven version outputs. |
+| 2026-10-23 | Qingyuan Zhu | Set up an independent verification branch and found an existing local Maven installation. | Created imaging-240-verification based on the group fix. Used cached Maven 3.9.9 without installing new software or changing the global Java settings. | Local branch, Maven version, and verification commands. |
+| 2026-10-23 | Qingyuan Zhu | Independently tested the original issue before the fix. | Reproduced IOException: Not a Valid TIFF File at baseline 4ee55f32. Two of the five existing regression tests failed with the expected exception. | Baseline worktree and red test results. |
+| 2026-10-23 | Qingyuan Zhu | Tested the same cases after the fix and checked the EXIF data. | All five existing regression tests passed with fix commit 90e3ce1e. Confirmed that the EXIF subdirectory ended without the required four-byte footer. | Green test results and EXIF byte inspection. |
+| 2026-10-23 | Qingyuan Zhu | Added boundary tests for incomplete EXIF directory footers. | Added tests for 1, 2, and 3 remaining bytes. Non-strict mode kept the EXIF directory and its entries, while strict mode rejected the incomplete data. | JpegImaging240Test.java and focused test results. |
+| 2026-10-23 | Qingyuan Zhu | Added tests for big-endian TIFF data. | Built a small big-endian TIFF sample with a missing EXIF footer. Non-strict mode accepted it, while strict mode rejected it. Four new test methods were added in total. | JpegImaging240Test.java and focused test results. |
+| 2026-10-23 | Qingyuan Zhu | Reviewed other possible edge cases and the existing production fix. | Checked truncated directory entries and FormatCompliance fail-on-error behaviour. Did not add unrelated tests or change production code. Found no new issue caused by the fix. | Code review findings and temporary test results. |
+| 2026-10-23 | Qingyuan Zhu | Ran the focused regression tests and reviewed the test changes. | All nine IMAGING-240 tests passed with zero failures or errors. Git diff showed changes only in JpegImaging240Test.java, and git diff --check passed. | Focused test output, Git diff, and Git status. |
+| 2026-10-23 | Qingyuan Zhu | Investigated failures in the first full Maven build. | Found 11 test errors caused by spaces in the local repository path and 647 Checkstyle violations caused by CRLF line endings. These were local environment problems, not changes caused by IMAGING-240. | Maven logs, baseline comparison, and Checkstyle output. |
+| 2026-10-23 | Qingyuan Zhu | Created a separate temporary worktree for clean verification. | Used a short path without spaces and LF line endings. Kept the main working branch unchanged and confirmed the test changes matched the verified copy. | Temporary worktree, Git diff comparison, and build logs. |
+| 2026-10-23 | Qingyuan Zhu | Ran the full Maven clean verify build. | BUILD SUCCESS, exit 0. All 1,268 tests ran with zero failures, zero errors, and seven skipped. Used -DforkCount=0 to avoid a local Windows command issue with the JDK path. | Full Maven clean verify output and test summary. |
+| 2026-10-23 | Qingyuan Zhu | Checked the remaining Maven quality checks and Javadoc. | RAT, Checkstyle, PMD, and SpotBugs passed with no reported issues. Javadoc worked when run directly, but the complete default Maven command failed at the Javadoc plugin because the local JDK path contained parentheses. This was recorded as an environment limitation, not a successful default build. | Maven quality-check output, Javadoc results, and error logs. |
+| 2026-10-23 | Qingyuan Zhu | Completed the final code review and shared the added tests with the group. | Confirmed the tests covered the intended boundary cases without changing the production fix. All other group members confirmed the changes. | Final Git diff, test results, and group confirmation. |
 
-The implementation commit is available remotely. Tutor review of final changes and creation of an upstream PR have not been recorded. The 8-12 person-hour estimate remains a plan, not measured time.
+### Qingyuan Zhu - Contribution Summary
+
+I independently checked the original IMAGING-240 problem and confirmed that the group's fix worked. I added four new test methods covering incomplete EXIF directory footers and big-endian TIFF data in strict and non-strict modes.
+
+I also reviewed the existing fix, checked other possible edge cases, and ran the tests in a separate environment to avoid local path and line-ending problems. All 1,268 tests passed in the clean verify build, and the main quality checks passed.
+
+I did not change the production code. My code contribution was limited to the new boundary tests in `JpegImaging240Test.java`. All other group members confirmed my changes.
+
+At the time of this entry, my changes had not been committed or pushed, and no upstream PR had been opened for my additional work.
