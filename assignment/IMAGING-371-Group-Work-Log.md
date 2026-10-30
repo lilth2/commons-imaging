@@ -97,29 +97,34 @@ clean verify apache-rat:check checkstyle:check spotbugs:check pmd:check javadoc:
 
 The recorded executions also supplied a task-local Maven cache through `-Dmaven.repo.local`. No check was disabled to obtain the final success. External local evidence is under `E:\Computing\6120\A5\imaging371-evidence`; the runner is `E:\Computing\6120\A5\Run-Imaging371Checks.ps1`. The before-repair evidence is retained in `red.log`; rerunning the test on the repaired source should pass.
 
-## Qingyuan Zhu pending independent validation
+## Qingyuan Zhu independent validation record
 
-This section is intentionally retained for Qingyuan to continue the work. It describes pending responsibilities, not completed results. Review the implementation commit and design independent tests based on the final change.
+| Date | Work completed | Actual result and evidence |
+| --- | --- | --- |
+| 2026-10-31 | Fetched the latest group branch and created `imaging-371-verification` from `origin/fix/imaging-371`. Reviewed the implementation commit, `TiffReader.java`, and the existing `TiffGpsVersionIdTest.java`. | Confirmed that the fix preserves tag zero in GPS directories while retaining the original filter in other directories. The working tree was clean before validation. |
+| 2026-10-31 | Independently ran the existing GPSVersionID regression tests and related TIFF/GPS tests. | All 10 existing GPSVersionID test invocations passed. Another 34 related test invocations passed. No production code changes were needed. |
+| 2026-10-31 | Added two boundary regression tests to `TiffGpsVersionIdTest.java`. | Added 72 lines covering a GPS tag-zero entry with an invalid count and offset, and a GPS tag-zero entry with an unknown field type. Both tests cover little-endian and big-endian inputs with strict mode enabled and disabled. |
+| 2026-10-31 | Checked how the reader handles malformed GPS fields and neighbouring entries. | Strict mode rejected the malformed count/offset case with an `IOException`. Non-strict mode discarded the malformed field and preserved the following GPSLatitudeRef. The unknown field type was skipped in both modes, while GPSLatitudeRef remained readable. |
+| 2026-10-31 | Checked the new malformed-entry test against the original tag-zero behaviour. | Reverting the production fix locally caused the new strict-mode assertions to fail. The fix was then restored. No production changes were retained. |
+| 2026-10-31 | Ran the updated GPSVersionID tests and the full Maven test suite. | All 18 focused test invocations passed. The full suite executed 1,277 tests, with zero failures, zero errors, and seven unrelated skips. |
+| 2026-10-31 | Ran the Maven verification and quality checks in a temporary worktree at `C:\verif-imaging-371`. | Compilation, tests, Apache RAT, Checkstyle, SpotBugs, and PMD passed. The JavaDoc goal failed because Maven's Windows command invocation could not handle parentheses in the local JDK path. The same failure was reproduced on the unchanged baseline. The complete build therefore did not finish successfully. Evidence: `C:\verif-imaging-371-logs\full-build-2.log`. |
+| 2026-10-31 | Reviewed the final changes and checked the working tree. | `git diff --check` passed. Only `TiffGpsVersionIdTest.java` was modified, with 72 insertions and no deletions. Existing tests and production code were unchanged. |
+| 2026-10-31 | Submitted the two additional boundary tests for group review. | Group confirmation was received. The changes are ready for a separate test commit. |
 
-- [ ] Verify the repair and core regression assertions independently.
-- [ ] Check non-GPS subdirectories as well as the root directory, including malformed tag-zero count and offset combinations with bounded inputs.
-- [ ] Investigate malformed GPS field types, counts, and offsets against the existing parser contract, including strict and non-strict behaviour.
-- [ ] Check missing GPS directories and preservation of adjacent entries where relevant.
-- [ ] Assess whether the shared-reader change warrants focused JPEG EXIF, writer/read round-trip, or BigTIFF checks. Record which paths were actually tested.
-- [ ] Add any justified boundary regression tests without disabling or weakening existing assertions.
-- [ ] Run the final complete default Maven build after any additional changes; retain commands, environment, test counts, exit codes, and logs.
-- [ ] Record findings, resolutions, and the final validation result below; obtain group review before committing new contributions.
+### Validation scope and limitations
 
-### Qingyuan findings and completion record
+The additional tests check two malformed GPS tag-zero cases that were not covered by the original regression tests. They confirm that the reader still applies field-length checks and unknown-type handling after the GPSVersionID fix.
 
-Status: Pending. No independent execution, findings, additional tests, or final acceptance have been recorded yet.
+The tests use small, in-memory classic TIFF inputs. They do not establish separate coverage for JPEG EXIF integration, BigTIFF, or writer/read round trips. These paths were not added to the issue-specific tests.
 
-| Date | Check or review scope | Finding | Resolution | Evidence and outcome |
-| --- | --- | --- | --- | --- |
-| Pending | To be completed by Qingyuan after actual review and execution | Pending | Pending | Pending |
+The complete Maven test suite and the main quality checks passed. The JavaDoc failure was reproduced on the unchanged baseline and was not caused by the new tests. No global Java configuration was changed.
+
+The independent validation is complete, and group review has been confirmed. No upstream pull request or maintainer review is claimed in this record.
 
 ## Submission status
 
-The implementation has been committed locally following the group confirmation reported by Shuyang. This log accompanies that implementation in the group branch. Final independent validation, final tutor viewing, and an upstream pull request remain to be recorded after they occur.
+The implementation and core tests were committed by Shuyang Feng in `aededf8d4309e072b828d69383d874b956012cfc`. Qingyuan completed independent boundary validation, added two regression tests, and received group confirmation. The additional tests and updated work log are pending separate commits.
 
-This course record is kept separate from the implementation commit so a future upstream contribution can include the focused source and tests without the administrative log.
+Final tutor viewing, upstream pull request submission, and maintainer review have not been recorded.
+
+This course record is kept separate from the technical contribution.
