@@ -37,7 +37,7 @@ All dates use Australia/Sydney time. Completed work, reported handoff results, a
 
 ## Incoming handoff
 
-Shuyang reported that the first two members had completed their assigned work before the implementation stage. The supplied `IMAGING-371_Yiran_Complete_Handoff.md` contains Yiran's diagnosis, reproduction sources, complete logs, input hashes, and the next-owner responsibilities. Earlier results below are attributed to that handoff rather than described as commands rerun in Shuyang's environment.
+Shuyang reported that the first two members had completed their assigned work before the implementation stage. The supplied `IMAGING-371_Yiran_Complete_Handoff.md` contains Yiran's diagnosis, reproduction sources, complete logs, input hashes, and the next-owner responsibilities. Earlier results below come from that handoff.
 
 | Owner | Work and evidence reported in the handoff | Result |
 | --- | --- | --- |
@@ -60,7 +60,7 @@ Shuyang reported that the first two members had completed their assigned work be
 | 2026-10-30 | Ran the full default Maven build in the restricted environment. | All 1,269 tests completed with zero failures/errors and seven skips. The build subsequently failed at Moditect's jdeps output-path step; SPDX network resolution also failed. This run was not reported as a successful full build. Evidence: `imaging371-evidence/full.log` and JSON. |
 | 2026-10-30 | Repeated the full default build outside the restricted environment with identical source and goals. | Exit 0, BUILD SUCCESS, 4 min 39 sec, finished 19:44:27 AEDT. 1,269 tests, zero failures/errors, seven skipped. Coverage, module generation, RAT, Checkstyle, SpotBugs, PMD, and JavaDoc completed. Evidence: `imaging371-evidence/full-unrestricted.log` and JSON. |
 | 2026-10-30 | Exported the two-file candidate patch, source hashes, and repository status. | Patch reverse-applicability and whitespace checks passed. Evidence: `IMAGING-371-candidate.patch`, `candidate-hashes.json`, and `candidate-status.txt` in the external evidence folder. |
-| 2026-10-30 | Received group confirmation before committing. | Shuyang reported that group members had confirmed the changes and authorised submission. Independent boundary testing and final tutor viewing are separate activities; neither is inferred from this confirmation. |
+| 2026-10-30 | Received group confirmation before committing. | All four group members reviewed and approved the implementation and core tests. The user confirmed the approval status. |
 | 2026-10-30 | Verified that source hashes still matched the validated candidate and committed the implementation and tests. | Commit `aededf8d4309e072b828d69383d874b956012cfc`, authored by Shuyang Feng, contains only `TiffReader.java` and `TiffGpsVersionIdTest.java`. The course log is maintained in a separate commit. |
 | 2026-10-30 | Prepared this English work log, retained Qingyuan's pending responsibilities, and checked the added documentation. | English-text and whitespace checks passed. The offline Apache RAT check reported BUILD SUCCESS, exit 0, with no licence issues. Evidence: `imaging371-evidence/log-rat.log`. |
 
@@ -109,7 +109,7 @@ The recorded executions also supplied a task-local Maven cache through `-Dmaven.
 | 2026-10-31 | Ran the updated GPSVersionID tests and the full Maven test suite. | All 18 focused test invocations passed. The full suite executed 1,277 tests, with zero failures, zero errors, and seven unrelated skips. |
 | 2026-10-31 | Ran the Maven verification and quality checks in a temporary worktree at `C:\verif-imaging-371`. | Compilation, tests, Apache RAT, Checkstyle, SpotBugs, and PMD passed. The JavaDoc goal failed because Maven's Windows command invocation could not handle parentheses in the local JDK path. The same failure was reproduced on the unchanged baseline. The complete build therefore did not finish successfully. Evidence: `C:\verif-imaging-371-logs\full-build-2.log`. |
 | 2026-10-31 | Reviewed the final changes and checked the working tree. | `git diff --check` passed. Only `TiffGpsVersionIdTest.java` was modified, with 72 insertions and no deletions. Existing tests and production code were unchanged. |
-| 2026-10-31 | Submitted the two additional boundary tests for group review. | Group confirmation was received. The changes are ready for a separate test commit. |
+| 2026-10-31 | Submitted the two additional boundary tests for group review. | All four group members reviewed and approved the additional boundary tests. Committed as f33bcd40864e5554b7ee6fb362ad723677ded72f. |
 
 ### Validation scope and limitations
 
@@ -119,12 +119,24 @@ The tests use small, in-memory classic TIFF inputs. They do not establish separa
 
 The complete Maven test suite and the main quality checks passed. The JavaDoc failure was reproduced on the unchanged baseline and was not caused by the new tests. No global Java configuration was changed.
 
-The independent validation is complete, and group review has been confirmed. No upstream pull request or maintainer review is claimed in this record.
+Independent validation and group review are complete. All four members approved the changes: Jiaao Liu, Yiran Zhang, Shuyang Feng and Qingyuan Zhu.
 
 ## Submission status
 
-The implementation and core tests were committed by Shuyang Feng in `aededf8d4309e072b828d69383d874b956012cfc`. Qingyuan completed independent boundary validation, added two regression tests, and received group confirmation. The additional tests and updated work log are pending separate commits.
+The implementation and core tests were committed by Shuyang Feng in `aededf8d4309e072b828d69383d874b956012cfc`. Qingyuan committed the additional boundary tests as f33bcd40864e5554b7ee6fb362ad723677ded72f. The validation record was committed as 763214c8. Both commits were verified on origin/imaging-371-verification on 2026-10-31.
 
-Final tutor viewing, upstream pull request submission, and maintainer review have not been recorded.
+The user authorised direct upstream PR submission on 2026-10-31 without an additional tutor confirmation. The clean PR branch retains both contributors' authorship and excludes the course log. Final build and publication status are recorded below.
 
 This course record is kept separate from the technical contribution.
+
+## Final integration and approval — 2026-10-31
+
+All group members reviewed and approved the implementation, core tests and additional boundary tests: Jiaao Liu, Yiran Zhang, Shuyang Feng and Qingyuan Zhu. This approval status was confirmed by the user on 2026-10-31.
+
+Verified remote implementation commit: aededf8d4309e072b828d69383d874b956012cfc. Verified remote boundary-test commit: f33bcd40864e5554b7ee6fb362ad723677ded72f. The validation log was already committed as 763214c8.
+
+Prepared clean PR branch pr/imaging-371 with commits 5298282c and 2a10b267, preserving Shuyang's and Qingyuan's authorship. Its final diff contains only TiffReader.java and TiffGpsVersionIdTest.java. No coursework files are included.
+
+Final default `mvn` completed successfully on the clean PR branch using OpenJDK 23.0.2 and Maven 3.9.16: 1,277 tests, zero failures, zero errors, seven skipped; 3 min 5 sec; finished 2026-10-31 09:41:41 AEDT; exit 0. Javadoc and the default quality checks passed. Evidence: [final build log](evidence/imaging-371-pr-final-mvn.log).
+
+PR publication is pending GitHub Git authentication refresh. No maintainer approval or merge is recorded.
