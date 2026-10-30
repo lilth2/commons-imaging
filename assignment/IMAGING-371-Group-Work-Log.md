@@ -140,3 +140,7 @@ Prepared clean PR branch pr/imaging-371 with commits 5298282c and 2a10b267, pres
 Final default `mvn` completed successfully on the clean PR branch using OpenJDK 23.0.2 and Maven 3.9.16: 1,277 tests, zero failures, zero errors, seven skipped; 3 min 5 sec; finished 2026-10-31 09:41:41 AEDT; exit 0. Javadoc and the default quality checks passed. Evidence: [final build log](evidence/imaging-371-pr-final-mvn.log).
 
 Upstream PR submitted on 2026-10-31: https://github.com/apache/commons-imaging/pull/569 (Open). Both technical commits and the updated course log were pushed to the group fork. The PR contains exactly two files: TiffReader.java and TiffGpsVersionIdTest.java. CI and maintainer review are pending; the PR is not merged.
+
+## CI evidence-file correction — 2026-10-31
+
+The verification-branch CI failed Apache RAT because assignment/evidence/imaging-371-pr-final-mvn.log had no license header. Added an Apache License 2.0 header while retaining the original Maven output. Local `mvn apache-rat:check` then passed (exit 0, 3.579 sec). This documentation correction does not change the production source or tests and is excluded from upstream PR #569. The push triggers a new verification-branch CI run; its outcome must be checked separately.
